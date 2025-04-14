@@ -6,4 +6,5 @@ export class CreatePlaceDto {
   address: string;
   type: PlaceType;
   cityId: number;
+  image: string;
 }

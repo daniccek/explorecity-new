@@ -29,4 +29,7 @@ d
 
   @OneToMany(() => Rating, (rating) => rating.place)
   ratings: Rating[];
+
+  @Column({ nullable: true })
+  image: string;
 }

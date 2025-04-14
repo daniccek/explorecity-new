@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { PlacesService } from './places.service';
 import { CreatePlaceDto } from './dto/create-places.dto';
 
@@ -7,8 +7,17 @@ export class PlacesController {
   constructor(private readonly placesService: PlacesService) {}
 
   @Get('city/:id')
-  findByCity(@Param('id') cityId: number) {
+  findByCity(@Param('id', ParseIntPipe) cityId: number) {
     return this.placesService.findByCity(cityId);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const place = await this.placesService.findOne(id);
+    if (!place) {
+      throw new NotFoundException('Place not found');
+    }
+    return place;
   }
 
   @Post()
@@ -16,18 +25,12 @@ export class PlacesController {
     return this.placesService.create(dto);
   }
 
-  @Put(':id')
-  update(@Param('id') id: number, @Body() dto: CreatePlaceDto) {
-    return this.placesService.update(id, dto);
-  }
-
   @Delete(':id')
-  delete(@Param('id') id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    const place = await this.placesService.findOne(id);
+    if (!place) {
+      throw new NotFoundException('Place not found');
+    }
     return this.placesService.delete(id);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.placesService.findOne(id);
   }
 }

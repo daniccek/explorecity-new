@@ -1,0 +1,9 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+  .star.active {
+    text-shadow: 0 0 4px rgba(255, 215, 0, 0.8);
+  }

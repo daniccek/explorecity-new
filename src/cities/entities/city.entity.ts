@@ -11,4 +11,7 @@ export class City {
 
   @OneToMany(() => Place, (place) => place.city)
   places: Place[];
+
+  @Column({ nullable: true })
+  image: string;
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Delete, Param, Body } from '@nestjs/common';
+import {Controller,Get,Post, Body,Param, Delete, ParseIntPipe,NotFoundException,} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comments.dto';
 
@@ -11,8 +11,15 @@ export class CommentsController {
     return this.commentsService.create(dto);
   }
 
+  @Get('place/:placeId')
+  findByPlace(@Param('placeId', ParseIntPipe) placeId: number) {
+    return this.commentsService.findByPlace(placeId);
+  }
+
   @Delete(':id')
-  delete(@Param('id') id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    const comment = await this.commentsService.findById(id);
+    if (!comment) throw new NotFoundException('Comment not found');
     return this.commentsService.delete(id);
   }
 }

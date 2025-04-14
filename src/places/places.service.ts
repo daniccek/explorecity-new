@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Place } from './entities/place.entity';
@@ -24,23 +24,16 @@ export class PlacesService {
 
   async create(dto: CreatePlaceDto) {
     const city = await this.cityRepository.findOneBy({ id: dto.cityId });
-    if (!city) throw new Error('City not found');
+    if (!city) throw new NotFoundException('City not found');
 
-    const place = this.placeRepository.create({
-    ...dto,
-  city,
-  });
-}
-
-  async update(id: number, dto: CreatePlaceDto) {
-    const city = await this.cityRepository.findOneBy({ id: dto.cityId });
-    if (!city) throw new Error('City not found');
-
-    return this.placeRepository.save({ id, ...dto, city });
+    const place = this.placeRepository.create({ ...dto, city });
+    return this.placeRepository.save(place);
   }
 
-  delete(id: number) {
-    return this.placeRepository.delete(id);
+  async delete(id: number) {
+    const place = await this.placeRepository.findOne({ where: { id } });
+    if (!place) throw new NotFoundException('Place not found');
+    return this.placeRepository.remove(place);
   }
 
   findOne(id: number) {

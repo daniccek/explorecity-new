@@ -7,7 +7,7 @@ export class Comment {
   id: number;
 
   @Column()
-  authorName: string;
+  name: string;
 
   @Column()
   text: string;

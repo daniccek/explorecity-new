@@ -1,6 +1,7 @@
 export class CreateCommentDto {
     placeId: number;
-    authorName: string;
+    name: string;
     text: string;
+    rating: string;
   }
   

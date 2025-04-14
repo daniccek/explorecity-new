@@ -19,11 +19,23 @@ export class CommentsService {
     if (!place) throw new Error('Place not found');
 
     const comment = this.commentRepository.create({
-    authorName: dto.authorName,
-    text: dto.text,
-    place,
-});
+      ...dto,
+      place,
+      createdAt: new Date(),
+    });
+
     return this.commentRepository.save(comment);
+  }
+
+  findByPlace(placeId: number) {
+    return this.commentRepository.find({
+      where: { place: { id: placeId } },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async findById(id: number): Promise<Comment | null> {
+    return this.commentRepository.findOneBy({ id });
   }
 
   delete(id: number) {
